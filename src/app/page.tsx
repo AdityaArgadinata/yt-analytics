@@ -1,103 +1,162 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
+import ChannelHeader from "@/components/channel-header";
+import AnalyticsTab from "@/components/analytics-tab";
+import type { AnalyzeResponse } from "@/types";
 
-export default function Home() {
+export default function HomePage() {
+  const [q, setQ] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<AnalyzeResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Load query and cache from localStorage only on client
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const lastQuery = localStorage.getItem("yt-analytics-last-query") || "";
+      if (lastQuery && !q) setQ(lastQuery);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!q.trim()) return;
+    const key = `yt-analytics-cache-${q.trim().toLowerCase()}`;
+    const cached = localStorage.getItem(key);
+    if (cached) {
+      try {
+        const { data, ts } = JSON.parse(cached);
+        if (Date.now() - ts < 3600_000) {
+          setData(data);
+        } else {
+          localStorage.removeItem(key);
+        }
+      } catch {}
+    }
+    // Simpan query terakhir
+    localStorage.setItem("yt-analytics-last-query", q.trim());
+  }, [q]);
+
+  async function onSearch(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setData(null);
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/analyze?q=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed");
+      setData(json as AnalyzeResponse);
+      // Save to localStorage with timestamp
+      const key = `yt-analytics-cache-${q.trim().toLowerCase()}`;
+      localStorage.setItem(key, JSON.stringify({ data: json, ts: Date.now() }));
+      localStorage.setItem("yt-analytics-last-query", q.trim());
+    } catch (err: any) {
+      setError(err?.message ?? "Failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+      <div className="w-full max-w-4xl">
+        <header className="bg-white/90 rounded-2xl p-6 mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 mb-4 text-center">
+            YouTube Channel Analytics
+          </h1>
+          <form onSubmit={onSearch} className="flex items-center gap-2">
+            <div className="relative w-full">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </span>
+              <input
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 bg-slate-50 outline-none ring-slate-400 focus:ring-2 focus:bg-white transition text-base placeholder:text-slate-400"
+                placeholder="Telusuri nama channel"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                autoFocus
+                autoComplete="off"
+              />
+            </div>
+            <button
+              disabled={loading || !q.trim()}
+              className="rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 px-6 py-3 font-semibold text-white shadow hover:scale-105 transition disabled:opacity-50 flex items-center gap-2"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="animate-spin"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                      opacity=".25"
+                    />
+                    <path
+                      d="M22 12a10 10 0 0 1-10 10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                  </svg>
+                  Memproses...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                  Analisis
+                </span>
+              )}
+            </button>
+          </form>
+          {error && (
+            <p className="mt-2 text-sm text-red-600 text-center">{error}</p>
+          )}
+        </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        {data && (
+          <div className="space-y-6">
+            <ChannelHeader channel={data.channel} />
+            <AnalyticsTab data={data} />
+          </div>
+        )}
+
+        {!data && !loading && (
+          <div className="bg-white/80 rounded-xl shadow p-6 text-center text-slate-700">
+            <p className="text-base subtle">
+              Masukkan nama channel lalu tekan <b>Analisis</b>.<br />
+              Kita akan mengambil hingga <b>500 video terbaru</b> untuk laporan
+              seperti pada contoh.
+            </p>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
