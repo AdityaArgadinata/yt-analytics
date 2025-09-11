@@ -139,7 +139,7 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
             {pagedVideos.map((v, i) => (
               <tr
                 key={v.id}
-                className={i % 2 === 0 ? "bg-white" : "bg-gray-200"}
+                className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}
               >
                 <td
                   className="px-4 py-2 pr-6 truncate max-w-[48ch] align-middle text-slate-900"
@@ -183,27 +183,6 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
             </button>
           </div>
         </div>
-      </div>
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-slate-900">Data Video</h3>
-        <button
-          onClick={handleExportExcel}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium shadow hover:bg-green-700 transition-colors flex items-center gap-2"
-        >
-          <svg
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7,10 12,15 17,10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Export to Excel
-        </button>
       </div>
     </div>
   );

@@ -56,7 +56,7 @@ export function buildAnalytics(videos: VideoLite[]) {
   }
 
   const byDay = Array.from(byDayMap, ([day, val]) => ({ day, ...val })).sort(
-    (a, b) => DAYS.indexOf(a.day as any) - DAYS.indexOf(b.day as any)
+    (a, b) => (DAYS as readonly string[]).indexOf(a.day) - (DAYS as readonly string[]).indexOf(b.day)
   );
 
   const byHour = Array.from(byHourMap, ([hour, val]) => ({

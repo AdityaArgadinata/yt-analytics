@@ -36,8 +36,9 @@ export async function GET(req: NextRequest) {
 			analytics,
 		};
 		return NextResponse.json(payload, { status: 200 });
-	} catch (e: any) {
+	} catch (e: unknown) {
 		console.error("Analyze API error:", e);
-		return NextResponse.json({ error: e?.message ?? "Failed" }, { status: 500 });
+		const errorMessage = e instanceof Error ? e.message : "Failed";
+		return NextResponse.json({ error: errorMessage }, { status: 500 });
 	}
 }

@@ -2,11 +2,25 @@
 import { cache } from "react";
 
 const API = "https://www.googleapis.com/youtube/v3";
+// import type { VideoLite } from "@/types";
+
+// YouTube API types
+interface YouTubeVideoItem {
+  id: string;
+  snippet?: {
+    title?: string;
+    publishedAt?: string;
+  };
+  statistics?: {
+    viewCount?: string;
+  };
+}
+
 const KEY = process.env.YOUTUBE_API_KEY || "";
 const MAX_VIDEOS = Number(process.env.MAX_VIDEOS ?? 100);
 
 // ---------- helpers ----------
-function qs(obj: Record<string, any>) {
+function qs(obj: Record<string, unknown>) {
   return Object.entries(obj)
     .filter(([, v]) => v !== undefined && v !== null)
     .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
@@ -32,7 +46,7 @@ async function fetchJson(url: string, revalidateSec = 60) {
 
   if (!res.ok) {
     // coba ambil body agar tahu reason (quotaExceeded, accessNotConfigured, dll)
-    let detail: any = null;
+    let detail: unknown = null;
     try {
       detail = await res.json();
     } catch {
@@ -48,7 +62,12 @@ async function fetchJson(url: string, revalidateSec = 60) {
       keySet: !!KEY,
     });
     const reason =
-      (detail && (detail.error?.errors?.[0]?.reason || detail.error?.message)) ||
+      (detail && 
+       typeof detail === 'object' && 
+       detail !== null &&
+       'error' in detail && 
+       ((detail as { error?: { errors?: Array<{ reason?: string }>; message?: string } }).error?.errors?.[0]?.reason || 
+        (detail as { error?: { errors?: Array<{ reason?: string }>; message?: string } }).error?.message)) ||
       "";
     throw new Error(
       `YouTube API error (HTTP ${res.status})${reason ? `: ${reason}` : ""}`
@@ -202,7 +221,7 @@ export async function getVideoStats(
     })}`;
 
     const data = await fetchJson(url, 60);
-    const map: Record<string, any> = {};
+    const map: Record<string, YouTubeVideoItem> = {};
     for (const it of data.items ?? []) map[it.id] = it;
 
     for (const v of chunk) {
