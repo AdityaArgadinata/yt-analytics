@@ -27,8 +27,8 @@ export default function HomePage() {
 
   async function onSearch(e: React.FormEvent) {
     e.preventDefault();
-    if (!user || subscription.status !== 'active') return;
-    
+    if (!user || subscription.status !== "active") return;
+
     // Check for cached results first
     const key = `yt-analytics-cache-${q.trim().toLowerCase()}`;
     const cached = localStorage.getItem(key);
@@ -43,7 +43,7 @@ export default function HomePage() {
         }
       } catch {}
     }
-    
+
     setError(null);
     setData(null);
     setLoading(true);
@@ -71,19 +71,31 @@ export default function HomePage() {
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent leading-tight">
                 YouTube Analytics
               </h1>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">Wawasan profesional untuk kreator konten</p>
+              <p className="text-gray-600 mt-1 text-sm sm:text-base">
+                Wawasan profesional untuk kreator konten
+              </p>
             </div>
             <div className="flex-shrink-0 w-full sm:w-auto">
               <AuthButton />
             </div>
           </div>
-          
+
           {!user ? (
             <div className="text-center py-12">
               <div className="mb-6">
                 <div className="w-20 h-20 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mb-6 border border-gray-200">
-                  <svg className="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg
+                    className="w-10 h-10 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
                   </svg>
                 </div>
               </div>
@@ -97,8 +109,18 @@ export default function HomePage() {
                   </p>
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-left backdrop-blur-sm">
                     <h3 className="font-semibold text-amber-800 mb-4 flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
                       Petunjuk Setup:
                     </h3>
@@ -128,12 +150,13 @@ export default function HomePage() {
                     Masuk untuk mengakses Analytics
                   </h2>
                   <p className="text-gray-600 text-lg">
-                    Hubungkan dengan akun Google Anda untuk menganalisis channel YouTube
+                    Hubungkan dengan akun Google Anda untuk menganalisis channel
+                    YouTube
                   </p>
                 </div>
               )}
             </div>
-          ) : subscription.status !== 'active' ? (
+          ) : subscription.status !== "active" ? (
             <div>
               <SubscriptionStatus />
               <PricingCard onActivateCode={() => setShowCouponModal(true)} />
@@ -166,7 +189,9 @@ export default function HomePage() {
                   />
                 </div>
                 <button
-                  disabled={loading || !q.trim() || subscription.status !== 'active'}
+                  disabled={
+                    loading || !q.trim() || subscription.status !== "active"
+                  }
                   className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-8 py-4 font-semibold text-white shadow-lg hover:shadow-emerald-500/25 hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-3"
                 >
                   {loading ? (
@@ -221,7 +246,7 @@ export default function HomePage() {
           )}
         </header>
 
-        {user && subscription.status === 'active' && data && (
+        {user && subscription.status === "active" && data && (
           <div className="space-y-8">
             <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-6">
               <ChannelHeader channel={data.channel} />
@@ -232,12 +257,22 @@ export default function HomePage() {
           </div>
         )}
 
-        {user && subscription.status === 'active' && !data && !loading && (
+        {user && subscription.status === "active" && !data && !loading && (
           <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-8 text-center">
             <div className="mb-4">
               <div className="w-16 h-16 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mb-4 border border-gray-200">
-                <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <svg
+                  className="w-8 h-8 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
                 </svg>
               </div>
             </div>
@@ -245,8 +280,9 @@ export default function HomePage() {
               Siap untuk analisis
             </h3>
             <p className="text-gray-600 text-lg">
-              Masukkan nama channel YouTube di atas dan klik <span className="text-emerald-600 font-semibold">Analisis</span><br />
-              Kami akan mengambil hingga <span className="text-emerald-600 font-semibold">500 video terbaru</span> untuk wawasan yang komprehensif
+              Masukkan nama channel YouTube di atas dan klik{" "}
+              <span className="text-emerald-600 font-semibold">Analisis</span>
+              <br />
             </p>
           </div>
         )}

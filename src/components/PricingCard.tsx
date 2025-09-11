@@ -11,7 +11,7 @@ export default function PricingCard({ onActivateCode }: PricingCardProps) {
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
 
   const whatsappNumber = "+6285941927516";
-  const messageTemplate = `Halo, saya ingin berlangganan YouTube Analytics Tools seharga Rp 25.000
+  const messageTemplate = `Halo, saya ingin berlangganan YouTube Analytics Tools seharga Rp 20.000
 
 Detail akun saya:
 - Email: ${user?.email || 'belum login'}
@@ -28,7 +28,7 @@ Mohon kirimkan kode kupon untuk mengaktifkan semua fitur. Terima kasih!`;
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-2xl backdrop-blur-sm">
+      <div className="bg-white border border-gray-200 rounded-2xl p-8 backdrop-blur-sm">
         <div className="text-center">
           <div className="mb-6">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl mb-6 shadow-lg">
@@ -49,7 +49,7 @@ Mohon kirimkan kode kupon untuk mengaktifkan semua fitur. Terima kasih!`;
           <div className="mb-8">
             <div className="flex items-baseline justify-center gap-2">
               <span className="text-5xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
-                Rp 25.000
+                Rp 20.000
               </span>
               <span className="text-gray-600 text-lg">/ bulan</span>
             </div>
@@ -143,6 +143,81 @@ Mohon kirimkan kode kupon untuk mengaktifkan semua fitur. Terima kasih!`;
               </button>
             </div>
           )}
+        </div>
+        
+      </div>
+
+      {/* Step-by-step pembelian - Panel terpisah */}
+      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-8 mt-6 shadow-lg">
+        <h3 className="text-xl font-bold text-emerald-800 mb-6 flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          Cara Berlangganan (3 Langkah Mudah)
+        </h3>
+        
+        <div className="space-y-6">
+          {/* Step 1 */}
+          <div className="flex items-start gap-4 group hover:bg-white/40 p-4 rounded-xl transition-all duration-200">
+            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+              1
+            </div>
+            <div className="flex-1">
+              <h4 className="font-bold text-emerald-800 mb-2 text-lg">Klik "Dapatkan kode kupon"</h4>
+              <p className="text-emerald-700 leading-relaxed">
+                Otomatis membuka WhatsApp dengan template pesan yang sudah disiapkan. 
+                Data akun Anda akan otomatis terisi dalam pesan.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div className="flex items-start gap-4 group hover:bg-white/40 p-4 rounded-xl transition-all duration-200">
+            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+              2
+            </div>
+            <div className="flex-1">
+              <h4 className="font-bold text-emerald-800 mb-2 text-lg">Transfer Rp 20.000</h4>
+              <p className="text-emerald-700 leading-relaxed">
+                Admin akan memberikan nomor rekening via WhatsApp. Transfer sesuai nominal 
+                dan kirim bukti transfer untuk verifikasi cepat.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div className="flex items-start gap-4 group hover:bg-white/40 p-4 rounded-xl transition-all duration-200">
+            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+              3
+            </div>
+            <div className="flex-1">
+              <h4 className="font-bold text-emerald-800 mb-2 text-lg">Aktifkan kode kupon</h4>
+              <p className="text-emerald-700 leading-relaxed">
+                Setelah transfer diverifikasi, admin akan mengirim kode kupon. 
+                Masukkan kode tersebut untuk mengaktifkan semua fitur PRO.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 p-4 bg-white/60 rounded-xl border border-emerald-300">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="text-sm font-semibold text-emerald-800 mb-1">
+                Informasi Penting:
+              </p>
+              <ul className="text-sm text-emerald-700 space-y-1">
+                <li>• Waktu aktivasi: Maksimal 30 menit setelah transfer diterima</li>
+                <li>• Berlaku 30 hari dari tanggal aktivasi</li>
+                <li>• Dukungan WhatsApp prioritas 24/7</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 

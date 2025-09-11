@@ -91,7 +91,7 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
         <h3 className="text-lg font-semibold text-slate-900">Data Video</h3>
         <button
           onClick={handleExportExcel}
-          className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg font-medium shadow hover:bg-green-700 transition-colors flex items-center gap-2"
+          className="text-sm rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-4 py-2 text-white shadow-lg hover:shadow-emerald-500/25 hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2"
         >
           <svg
             width="16"
@@ -108,78 +108,94 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
           Export to Excel
         </button>
       </div>
-      <div className="overflow-hidden rounded-xl border border-slate-200">
-        <table className="min-w-full text-sm">
-          <thead className="bg-slate-50 text-left font-medium">
+      <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
+        <table className="min-w-full text-sm border-collapse">
+          <thead className="bg-emerald-50 text-left font-semibold text-slate-700">
             <tr>
               <th
-                className="px-3 py-2 cursor-pointer select-none"
+                className="px-4 py-3 cursor-pointer select-none border-b border-slate-200 hover:bg-emerald-100 transition-colors"
                 onClick={() => handleSort("title")}
               >
-                Judul Video{" "}
-                {sortKey === "title" && (sortOrder === "asc" ? "▲" : "▼")}
+                <div className="flex items-center gap-2">
+                  Judul Video
+                  <span className="text-emerald-600">
+                    {sortKey === "title" && (sortOrder === "asc" ? "▲" : "▼")}
+                  </span>
+                </div>
               </th>
               <th
-                className="px-3 py-2 cursor-pointer select-none"
+                className="px-4 py-3 cursor-pointer select-none border-b border-slate-200 hover:bg-emerald-100 transition-colors"
                 onClick={() => handleSort("publishedAt")}
               >
-                Tanggal Upload{" "}
-                {sortKey === "publishedAt" && (sortOrder === "asc" ? "▲" : "▼")}
+                <div className="flex items-center gap-2">
+                  Tanggal Upload
+                  <span className="text-emerald-600">
+                    {sortKey === "publishedAt" && (sortOrder === "asc" ? "▲" : "▼")}
+                  </span>
+                </div>
               </th>
               <th
-                className="px-3 py-2 text-right cursor-pointer select-none"
+                className="px-4 py-3 text-right cursor-pointer select-none border-b border-slate-200 hover:bg-emerald-100 transition-colors"
                 onClick={() => handleSort("viewCount")}
               >
-                Views{" "}
-                {sortKey === "viewCount" && (sortOrder === "asc" ? "▲" : "▼")}
+                <div className="flex items-center justify-end gap-2">
+                  Views
+                  <span className="text-emerald-600">
+                    {sortKey === "viewCount" && (sortOrder === "asc" ? "▲" : "▼")}
+                  </span>
+                </div>
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-200">
             {pagedVideos.map((v, i) => (
               <tr
                 key={v.id}
-                className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                className={`${
+                  i % 2 === 0 ? "bg-white" : "bg-slate-100"
+                } hover:bg-emerald-50 transition-colors`}
               >
-                <td
-                  className="px-4 py-2 pr-6 truncate max-w-[48ch] align-middle text-slate-900"
-                  title={v.title}
-                >
-                  {v.title}
+                <td className="px-4 py-3 border-r border-slate-200 align-top">
+                  <div className="font-medium text-slate-900 leading-snug text-sm sm:text-base" title={v.title}>
+                    {v.title}
+                  </div>
                 </td>
-                <td className="px-4 py-2 whitespace-nowrap align-middle text-slate-700">
-                  {clientDates[i]} - WIB
+                <td className="px-4 py-3 border-r border-slate-200 whitespace-nowrap align-top text-slate-600">
+                  <div className="text-xs sm:text-sm">{clientDates[i]} - WIB</div>
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums align-middle font-semibold text-slate-800">
-                  {v.viewCount.toLocaleString()}
+                <td className="px-4 py-3 text-right tabular-nums align-top">
+                  <div className="font-semibold text-slate-800 text-sm sm:text-base">
+                    {v.viewCount.toLocaleString()}
+                  </div>
+                  <div className="text-xs text-slate-500">views</div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-t border-slate-200">
-          <span className="text-xs text-slate-600">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 bg-emerald-50/50 border-t border-slate-200 gap-3">
+          <span className="text-sm text-slate-600 font-medium">
             Menampilkan {(page - 1) * PAGE_SIZE + 1} -{" "}
             {Math.min(page * PAGE_SIZE, sortedVideos.length)} dari{" "}
             {sortedVideos.length} video
           </span>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
             <button
-              className="px-2 py-1 rounded bg-slate-200 text-xs disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-600 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             >
-              Prev
+              ← Prev
             </button>
-            <span className="text-xs translate-y-1">
-              Halaman {page} / {totalPages}
+            <span className="text-sm font-medium text-slate-700 px-2">
+              {page} / {totalPages}
             </span>
             <button
-              className="px-2 py-1 rounded bg-slate-200 text-xs disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-600 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
             >
-              Next
+              Next →
             </button>
           </div>
         </div>

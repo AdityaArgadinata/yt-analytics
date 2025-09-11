@@ -47,7 +47,7 @@ export default function AnalyticsTabs({ data }: { data: AnalyzeResponse }) {
     <div className="space-y-6">
       {/* Ringkasan & Views */}
       <section className="tab-card p-4 mb-10">
-        <h2 className="section-title mb-3">Ringkasan & Views</h2>
+        <h2 className="section-title mb-3 font-bold">Ringkasan & Views</h2>
         <div className="grid gap-4 md:grid-cols-3 mb-10">
           <Stat
             label="Total Video (sample)"
@@ -85,7 +85,7 @@ export default function AnalyticsTabs({ data }: { data: AnalyzeResponse }) {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="Views" />
+                <Bar dataKey="Views" fill="#10b981" />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -96,14 +96,14 @@ export default function AnalyticsTabs({ data }: { data: AnalyzeResponse }) {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="Uploads" />
+                <Bar dataKey="Uploads" fill="#059669" />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
         </div>
 
-        <h3 className="mt-6 font-semibold">Rekomendasi Terapan</h3>
-        <ul className="mt-4 list-disc pl-6 text-sm text-slate-700">
+        <h3 className="mt-6 font-semibold text-slate-900">Rekomendasi Terapan</h3>
+        <ul className="mt-4 list-disc pl-6 text-sm text-slate-600 space-y-1 leading-relaxed">
           {data.analytics.suggestions.map((s, i) => (
             <li key={i}>{s}</li>
           ))}
@@ -120,8 +120,8 @@ export default function AnalyticsTabs({ data }: { data: AnalyzeResponse }) {
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="Uploads" />
-              <Bar dataKey="Views" />
+              <Bar dataKey="Uploads" fill="#059669" />
+              <Bar dataKey="Views" fill="#10b981" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -149,7 +149,7 @@ export default function AnalyticsTabs({ data }: { data: AnalyzeResponse }) {
           {topHash.map((h, i) => (
             <span
               key={i}
-              className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700 ring-1 ring-slate-200"
+              className="rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
             >
               {h}
             </span>
@@ -162,9 +162,9 @@ export default function AnalyticsTabs({ data }: { data: AnalyzeResponse }) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <div className="subtle text-sm">{label}</div>
-      <div className="mt-1 text-2xl font-semibold">{value}</div>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="text-sm font-medium text-slate-600">{label}</div>
+      <div className="mt-1 text-2xl font-bold text-slate-900">{value}</div>
     </div>
   );
 }
@@ -177,8 +177,8 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-3">
-      <div className="mb-2 text-sm font-medium text-slate-700">{title}</div>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="mb-3 text-sm font-semibold text-slate-700">{title}</div>
       {children}
     </div>
   );
@@ -192,9 +192,9 @@ function Idea({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <div className="font-medium">{title}</div>
-      <div className="mt-1 text-sm text-slate-700">{children}</div>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="font-semibold text-slate-900">{title}</div>
+      <div className="mt-2 text-sm text-slate-600 leading-relaxed">{children}</div>
     </div>
   );
 }
