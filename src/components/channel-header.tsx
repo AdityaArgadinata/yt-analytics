@@ -2,7 +2,6 @@
 import Image from "next/image";
 import type { ChannelBasics } from "@/types";
 import { FaYoutube, FaCheckCircle } from "react-icons/fa";
-import { HiOutlineExternalLink } from "react-icons/hi";
 
 export default function ChannelHeader({ channel }: { channel: ChannelBasics }) {
 	const formatSubscribers = (count: number) => {

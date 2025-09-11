@@ -165,7 +165,7 @@ Mohon kirimkan kode kupon untuk mengaktifkan semua fitur. Terima kasih!`;
               1
             </div>
             <div className="flex-1">
-              <h4 className="font-bold text-emerald-800 mb-2 text-lg">Klik "Dapatkan kode kupon"</h4>
+              <h4 className="font-bold text-emerald-800 mb-2 text-lg">Klik &quot;Dapatkan kode kupon&quot;</h4>
               <p className="text-emerald-700 leading-relaxed">
                 Otomatis membuka WhatsApp dengan template pesan yang sudah disiapkan. 
                 Data akun Anda akan otomatis terisi dalam pesan.
