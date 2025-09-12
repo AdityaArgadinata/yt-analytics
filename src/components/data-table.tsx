@@ -12,24 +12,39 @@ function parseDuration(duration?: string): number {
   if (!duration) return 0;
   
   // YouTube duration format: PT#H#M#S, PT#M#S, PT#S
-  // Examples: PT4M13S (4 minutes 13 seconds), PT1H2M10S (1 hour 2 minutes 10 seconds)
-  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?/);
-  if (!match) return 0;
+  // Examples: PT4M13S (4 minutes 13 seconds), PT1H2M10S (1 hour 2 minutes 10 seconds), PT30S (30 seconds)
+  
+  // Clean the duration string and validate format
+  const cleanDuration = duration.trim().toUpperCase();
+  if (!cleanDuration.startsWith('PT')) {
+    console.warn('Invalid duration format (no PT prefix):', duration);
+    return 0;
+  }
+  
+  // More comprehensive regex to handle all possible formats including edge cases
+  const match = cleanDuration.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/);
+  if (!match) {
+    console.warn('Duration format not recognized:', duration);
+    return 0;
+  }
   
   const hours = parseInt(match[1] || '0', 10);
   const minutes = parseInt(match[2] || '0', 10);
   const seconds = parseFloat(match[3] || '0');
   
+  // Validate parsed values
+  if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+    console.warn('Invalid numeric values in duration:', { duration, hours, minutes, seconds });
+    return 0;
+  }
+  
   const totalSeconds = hours * 3600 + minutes * 60 + seconds;
   
-  // Debug log untuk melihat parsing
-  console.log('Duration parsing:', { 
-    duration, 
-    hours, 
-    minutes, 
-    seconds, 
-    totalSeconds 
-  });
+  // Additional validation
+  if (totalSeconds < 0) {
+    console.warn('Negative duration calculated:', { duration, totalSeconds });
+    return 0;
+  }
   
   return totalSeconds;
 }
@@ -38,7 +53,6 @@ function parseDuration(duration?: string): number {
 function getVideoType(duration?: string): 'Short' | 'Long' {
   // If no duration data, assume it's a Long video (safer default)
   if (!duration) {
-    console.log('No duration provided, defaulting to Long');
     return 'Long';
   }
   
@@ -46,24 +60,44 @@ function getVideoType(duration?: string): 'Short' | 'Long' {
   
   // If parsing failed (0 seconds), default to Long
   if (durationInSeconds === 0) {
-    console.log('Duration parsing failed, defaulting to Long');
     return 'Long';
   }
   
   // YouTube Shorts are videos 60 seconds or less
-  const isShort = durationInSeconds <= 60;
-  
-  console.log('Video type detection:', { 
-    duration, 
-    durationInSeconds, 
-    isShort,
-    type: isShort ? 'Short' : 'Long'
-  });
+  // Be more explicit about the classification
+  const isShort = durationInSeconds > 0 && durationInSeconds <= 60;
   
   return isShort ? 'Short' : 'Long';
 }
 
+// Test function to validate duration parsing (for debugging)
+function testDurationParsing() {
+  const testCases = [
+    { duration: 'PT30S', expected: 30, type: 'Short' },
+    { duration: 'PT1M', expected: 60, type: 'Short' },
+    { duration: 'PT1M30S', expected: 90, type: 'Long' },
+    { duration: 'PT2M', expected: 120, type: 'Long' },
+    { duration: 'PT1H', expected: 3600, type: 'Long' },
+    { duration: 'PT1H2M3S', expected: 3723, type: 'Long' },
+    { duration: '', expected: 0, type: 'Long' },
+    { duration: 'PT0S', expected: 0, type: 'Long' },
+  ];
+  
+  console.log('=== Duration Parsing Test Results ===');
+  testCases.forEach(({ duration, expected, type }) => {
+    const parsed = parseDuration(duration);
+    const classified = getVideoType(duration);
+    const isCorrect = parsed === expected && classified === type;
+    console.log(`${isCorrect ? '✅' : '❌'} "${duration}" → ${parsed}s (${classified}) | Expected: ${expected}s (${type})`);
+  });
+}
+
 export default function DataTable({ videos }: { videos: VideoLite[] }) {
+  // Run duration parsing test on component mount (for debugging)
+  useEffect(() => {
+    testDurationParsing();
+  }, []);
+
   function handleExportExcel() {
     const data = videos.map((v) => ({
       "Tipe": getVideoType(v.duration),
@@ -228,9 +262,11 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
                 } hover:bg-emerald-50 transition-colors`}
               >
                 <td className="px-4 py-3 border-r border-slate-200 align-top">
-                  <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                    <span>{getVideoType(v.duration) === 'Short' ? '📱' : '🎬'}</span>
-                    <span>{getVideoType(v.duration)}</span>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                      <span>{getVideoType(v.duration) === 'Short' ? '📱' : '🎬'}</span>
+                      <span>{getVideoType(v.duration)}</span>
+                    </div>
                   </div>
                 </td>
                 <td className="px-4 py-3 border-r border-slate-200 align-top">
