@@ -87,7 +87,7 @@ export default function AuthButton() {
   }
 
   return (
-    <div className="space-y-3 w-full sm:w-auto">
+    <div className="space-y-3 w-full sm:w-auto font-apple">
       <button
         onClick={handleSignIn}
         className="flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 bg-white border border-gray-200 rounded-lg sm:rounded-xl font-medium text-gray-900 shadow-lg hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 backdrop-blur-sm text-sm sm:text-base w-full sm:w-auto"

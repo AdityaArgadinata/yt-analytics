@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import ChannelHeader from "@/components/channel-header";
 import AnalyticsTab from "@/components/analytics-tab";
+import KeywordInsightsTab from "@/components/keyword-insights-tab";
 import AuthButton from "@/components/AuthButton";
 import PricingCard from "@/components/PricingCard";
 import CouponActivation from "@/components/CouponActivation";
@@ -19,6 +20,7 @@ export default function HomePage() {
   const [data, setData] = useState<AnalyzeResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showCouponModal, setShowCouponModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'analytics' | 'keywords'>('analytics');
 
   // Load cached results only when user and subscription are ready, not on every keystroke
   useEffect(() => {
@@ -63,7 +65,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col items-center justify-center px-2 sm:px-4 py-4 sm:py-8">
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col items-center justify-center px-2 sm:px-4 py-4 sm:py-8 font-apple">
       <div className="w-full max-w-4xl">
         <header className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 md:mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
@@ -239,8 +241,53 @@ export default function HomePage() {
             <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-6">
               <ChannelHeader channel={data.channel} />
             </div>
-            <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl">
-              <AnalyticsTab data={data} />
+            
+            {/* Tab Navigation */}
+            <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-t-2xl shadow-xl">
+              <div className="border-b border-gray-200">
+                <nav className="flex space-x-8 px-6 pt-6">
+                  <button
+                    onClick={() => setActiveTab('analytics')}
+                    className={`pb-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center gap-2 ${
+                      activeTab === 'analytics'
+                        ? 'border-emerald-500 text-emerald-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Analytics Overview
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('keywords')}
+                    className={`pb-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center gap-2 ${
+                      activeTab === 'keywords'
+                        ? 'border-emerald-500 text-emerald-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    Keyword & Hashtag Insights
+                    <span className="ml-2 px-2 py-1 bg-emerald-100 text-emerald-800 text-xs rounded-full font-medium">
+                      NEW
+                    </span>
+                  </button>
+                </nav>
+              </div>
+              
+              {/* Tab Content */}
+              <div className="min-h-[400px]">
+                {activeTab === 'analytics' && <AnalyticsTab data={data} />}
+                {activeTab === 'keywords' && (
+                  <KeywordInsightsTab 
+                    channelId={data.channel.id}
+                    channelTitle={data.channel.title}
+                  />
+                )}
+              </div>
             </div>
           </div>
         )}

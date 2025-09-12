@@ -44,7 +44,7 @@ export default function AnalyticsTabs({ data }: { data: AnalyzeResponse }) {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-apple">
       {/* Ringkasan & Views */}
       <section className="tab-card p-4 mb-10">
         <h2 className="section-title mb-3 font-bold">Ringkasan & Views</h2>

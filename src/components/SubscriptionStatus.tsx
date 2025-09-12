@@ -8,7 +8,7 @@ export default function SubscriptionStatus() {
 
   if (loading) {
     return (
-      <div className="bg-white/95 backdrop-blur-xl border border-gray-200/60 rounded-2xl p-4 mb-6 shadow-lg shadow-gray-200/20 animate-pulse">
+      <div className="bg-white/95 backdrop-blur-xl border border-gray-200/60 rounded-2xl p-4 mb-6 shadow-lg shadow-gray-200/20 animate-pulse font-apple">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full"></div>
           <div className="flex-1">
@@ -44,7 +44,7 @@ export default function SubscriptionStatus() {
     const isNearExpiry = daysRemaining <= 7;
     
     return (
-      <div className="bg-white/95 backdrop-blur-xl border border-emerald-200/60 rounded-2xl mb-6 shadow-lg shadow-emerald-100/20 hover:shadow-emerald-200/30 transition-all duration-300 overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-xl border border-emerald-200/60 rounded-2xl mb-6 shadow-lg shadow-emerald-100/20 hover:shadow-emerald-200/30 transition-all duration-300 overflow-hidden font-apple">
         {/* Compact Header - Always Visible */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
@@ -155,7 +155,7 @@ export default function SubscriptionStatus() {
 
   if (subscription.status === 'expired') {
     return (
-      <div className="bg-white/95 backdrop-blur-xl border border-red-200/60 rounded-2xl mb-6 shadow-lg shadow-red-100/20 hover:shadow-red-200/30 transition-all duration-300 overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-xl border border-red-200/60 rounded-2xl mb-6 shadow-lg shadow-red-100/20 hover:shadow-red-200/30 transition-all duration-300 overflow-hidden font-apple">
         {/* Compact Header - Always Visible */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}

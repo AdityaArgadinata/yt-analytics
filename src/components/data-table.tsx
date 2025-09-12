@@ -86,7 +86,7 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
   }
 
   return (
-    <div>
+    <div className="font-apple">
       <div className="flex justify-between items-center mb-5">
         <h3 className="text-lg font-semibold text-slate-900">Data Video</h3>
         <button

@@ -20,7 +20,7 @@ export default function PricingCard({ onActivateCode }: PricingCardProps) {
   };
 
   return (
-    <div>
+    <div className="font-apple">
       <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
         <div className="text-center">
           <div className="mb-4 sm:mb-6">
@@ -78,6 +78,16 @@ export default function PricingCard({ onActivateCode }: PricingCardProps) {
               </div>
               <span className="text-gray-700 group-hover:text-gray-900 transition-colors text-sm sm:text-base">
                 Analytics & chart lanjutan
+              </span>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3 group">
+              <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center">
+                <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span className="text-gray-700 group-hover:text-gray-900 transition-colors text-sm sm:text-base">
+                Keyword & hashtag insights
               </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 group">

@@ -25,7 +25,7 @@ export default function ChannelHeader({ channel }: { channel: ChannelBasics }) {
 	};
 
 	return (
-		<div className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg shadow-gray-200/20 mb-4 sm:mb-6">
+		<div className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg shadow-gray-200/20 mb-4 sm:mb-6 font-apple">
 			{/* Channel Banner */}
 			<div className="relative h-24 sm:h-32 md:h-40 lg:h-48 bg-gradient-to-r from-red-500 via-red-600 to-red-700 overflow-hidden">
 				{channel.thumbnails?.high ? (

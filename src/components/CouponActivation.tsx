@@ -103,7 +103,7 @@ export default function CouponActivation({ onClose, onSuccess }: CouponActivatio
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 font-apple">
       <div className="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-8 shadow-2xl">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold text-gray-900">Aktifkan Kode Kupon</h3>
