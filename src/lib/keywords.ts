@@ -27,6 +27,21 @@ export interface HashtagData {
   }>;
 }
 
+export interface YouTubeVideo {
+  id: string;
+  snippet: {
+    title: string;
+    description: string;
+    publishedAt: string;
+    tags?: string[];
+  };
+  statistics: {
+    viewCount: string;
+    likeCount?: string;
+    commentCount?: string;
+  };
+}
+
 export interface KeywordInsights {
   topKeywords: KeywordData[];
   trendingHashtags: HashtagData[];
@@ -80,7 +95,7 @@ export function extractHashtags(text: string): string[] {
 }
 
 // Analisis kata kunci dari array video
-export function analyzeKeywords(videos: any[]): KeywordData[] {
+export function analyzeKeywords(videos: YouTubeVideo[]): KeywordData[] {
   const keywordMap = new Map<string, {
     frequency: number;
     totalViews: number;
@@ -173,7 +188,7 @@ export function analyzeKeywords(videos: any[]): KeywordData[] {
 }
 
 // Analisis hashtag dari array video
-export function analyzeHashtags(videos: any[]): HashtagData[] {
+export function analyzeHashtags(videos: YouTubeVideo[]): HashtagData[] {
   const hashtagMap = new Map<string, {
     frequency: number;
     totalViews: number;
@@ -284,14 +299,14 @@ export function generateRecommendations(keywords: KeywordData[], hashtags: Hasht
   }
 
   return {
-    suggestedKeywords: highPerformanceKeywords.slice(0, 10).map(k => k.keyword),
-    suggestedHashtags: [...trendingHashtags.slice(0, 5).map(h => h.hashtag), ...highPerformanceHashtags.slice(0, 5).map(h => h.hashtag)],
+    suggestedKeywords: [...new Set(highPerformanceKeywords.slice(0, 10).map(k => k.keyword))],
+    suggestedHashtags: [...new Set([...trendingHashtags.slice(0, 5).map(h => h.hashtag), ...highPerformanceHashtags.slice(0, 5).map(h => h.hashtag)])],
     insights
   };
 }
 
 // Fungsi utama untuk mendapatkan keyword insights
-export function getKeywordInsights(videos: any[]): KeywordInsights {
+export function getKeywordInsights(videos: YouTubeVideo[]): KeywordInsights {
   const keywords = analyzeKeywords(videos);
   const hashtags = analyzeHashtags(videos);
   const recommendations = generateRecommendations(keywords, hashtags);

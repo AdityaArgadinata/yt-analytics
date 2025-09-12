@@ -245,33 +245,35 @@ export default function HomePage() {
             {/* Tab Navigation */}
             <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-t-2xl shadow-xl">
               <div className="border-b border-gray-200">
-                <nav className="flex space-x-8 px-6 pt-6">
+                <nav className="flex px-3 sm:px-6 pt-3 sm:pt-6 overflow-x-auto scrollbar-hide -mb-px">
                   <button
                     onClick={() => setActiveTab('analytics')}
-                    className={`pb-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center gap-2 ${
+                    className={`pb-3 sm:pb-4 px-3 sm:px-4 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0 min-w-0 ${
                       activeTab === 'analytics'
                         ? 'border-emerald-500 text-emerald-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
-                    Analytics Overview
+                    <span className="hidden sm:inline">Analytics Overview</span>
+                    <span className="sm:hidden">Analytics</span>
                   </button>
                   <button
                     onClick={() => setActiveTab('keywords')}
-                    className={`pb-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap flex items-center gap-2 ${
+                    className={`pb-3 sm:pb-4 px-3 sm:px-4 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0 ml-3 sm:ml-8 min-w-0 ${
                       activeTab === 'keywords'
                         ? 'border-emerald-500 text-emerald-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
-                    Keyword & Hashtag Insights
-                    <span className="ml-2 px-2 py-1 bg-emerald-100 text-emerald-800 text-xs rounded-full font-medium">
+                    <span className="hidden sm:inline">Keyword & Hashtag Insights</span>
+                    <span className="sm:hidden">Keywords</span>
+                    <span className="ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-emerald-100 text-emerald-800 text-xs rounded-full font-medium flex-shrink-0">
                       NEW
                     </span>
                   </button>

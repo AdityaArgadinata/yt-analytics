@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKeywordInsights } from '@/lib/keywords';
 
+interface PlaylistItem {
+  snippet: {
+    resourceId: {
+      videoId: string;
+    };
+  };
+}
+
+interface PlaylistResponse {
+  items: PlaylistItem[];
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { channelId, maxResults = 50 } = await request.json();
@@ -50,19 +62,17 @@ export async function POST(request: NextRequest) {
       throw new Error('Gagal mengambil daftar video');
     }
 
-    const playlistData = await playlistResponse.json();
-    
+    const playlistData: PlaylistResponse = await playlistResponse.json();
+
     if (!playlistData.items || playlistData.items.length === 0) {
       return NextResponse.json(
-        { error: 'Tidak ada video ditemukan' },
+        { error: 'Tidak ada video ditemukan di channel' },
         { status: 404 }
       );
     }
 
     // Ambil video IDs
-    const videoIds = playlistData.items.map((item: any) => item.snippet.resourceId.videoId).join(',');
-
-    // Ambil detail video dengan snippet dan statistics
+    const videoIds = playlistData.items.map((item: PlaylistItem) => item.snippet.resourceId.videoId).join(',');    // Ambil detail video dengan snippet dan statistics
     const videosResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoIds}&key=${apiKey}`
     );

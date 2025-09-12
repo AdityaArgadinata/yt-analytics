@@ -23,7 +23,7 @@ export default function RootLayout({
               <footer className="w-full border-t border-slate-200 bg-white py-6 mt-8">
                 <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-slate-600 text-sm">
                   <span>&copy; {new Date().getFullYear()} YT Analytics. All rights reserved.</span>
-                  <span className="mt-2 md:mt-0">Made with <span className="text-red-500">&#10084;</span> by Aditya Argadinata</span>
+                  <span className="mt-2 md:mt-0">Made with <span className="text-red-500">&#10084;</span> by YouTube-Pro Analytics</span>
                 </div>
               </footer>
             </AuthProvider>

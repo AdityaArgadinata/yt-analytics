@@ -7,7 +7,7 @@ interface KeywordInsightsTabProps {
   channelTitle: string;
 }
 
-export default function KeywordInsightsTab({ channelId, channelTitle }: KeywordInsightsTabProps) {
+export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProps) {
   const { insights, loading, error, refreshInsights, getCacheStatus, lastFetchType } = useKeywordInsights(channelId);
   const [selectedTab, setSelectedTab] = useState<'keywords' | 'hashtags' | 'recommendations'>('keywords');
   const [showCacheNotification, setShowCacheNotification] = useState(false);
@@ -166,7 +166,7 @@ export default function KeywordInsightsTab({ channelId, channelTitle }: KeywordI
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setSelectedTab(tab.id as any)}
+              onClick={() => setSelectedTab(tab.id as 'keywords' | 'hashtags' | 'recommendations')}
               className={`flex-1 py-3 px-2 sm:px-4 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex items-center justify-center gap-1 sm:gap-2 transition-colors ${
                 selectedTab === tab.id
                   ? 'border-emerald-500 text-emerald-600 bg-emerald-50'
@@ -194,7 +194,7 @@ export default function KeywordInsightsTab({ channelId, channelTitle }: KeywordI
                       {index + 1}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">"{keyword.keyword}"</h4>
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">&ldquo;{keyword.keyword}&rdquo;</h4>
                       <p className="text-xs sm:text-sm text-gray-600">Digunakan {keyword.frequency} kali</p>
                     </div>
                   </div>
@@ -243,7 +243,7 @@ export default function KeywordInsightsTab({ channelId, channelTitle }: KeywordI
         <div className="space-y-3 sm:space-y-4">
           <h3 className="text-base sm:text-lg font-semibold text-gray-900 px-1">Hashtag Trending</h3>
           <div className="grid gap-3 sm:gap-4">
-            {insights.trendingHashtags.map((hashtag, index) => (
+            {insights.trendingHashtags.map((hashtag) => (
               <div key={hashtag.hashtag} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-2 sm:mb-3">
                   <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
@@ -320,9 +320,9 @@ export default function KeywordInsightsTab({ channelId, channelTitle }: KeywordI
               <span className="text-sm sm:text-base">Kata Kunci yang Disarankan</span>
             </h4>
             <div className="flex flex-wrap gap-2">
-              {insights.recommendations.suggestedKeywords.map((keyword) => (
+              {insights.recommendations.suggestedKeywords.map((keyword, index) => (
                 <span
-                  key={keyword}
+                  key={`suggested-keyword-${keyword}-${index}`}
                   className="px-2 sm:px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs sm:text-sm font-medium border border-emerald-200 hover:bg-emerald-200 transition-colors cursor-pointer"
                 >
                   {keyword}
@@ -341,9 +341,9 @@ export default function KeywordInsightsTab({ channelId, channelTitle }: KeywordI
               <span className="text-sm sm:text-base">Hashtag yang Disarankan</span>
             </h4>
             <div className="flex flex-wrap gap-2">
-              {insights.recommendations.suggestedHashtags.map((hashtag) => (
+              {insights.recommendations.suggestedHashtags.map((hashtag, index) => (
                 <span
-                  key={hashtag}
+                  key={`suggested-hashtag-${hashtag}-${index}`}
                   className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm font-medium border border-blue-200 hover:bg-blue-200 transition-colors cursor-pointer"
                 >
                   {hashtag}
