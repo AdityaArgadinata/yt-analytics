@@ -188,13 +188,13 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
           <div className="grid gap-3 sm:gap-4">
             {insights.topKeywords.map((keyword, index) => (
               <div key={keyword.keyword} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="flex items-start justify-between mb-3">
                   <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                     <div className="w-6 h-6 sm:w-8 sm:h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold flex-shrink-0">
                       {index + 1}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">&ldquo;{keyword.keyword}&rdquo;</h4>
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight mb-1">&ldquo;{keyword.keyword}&rdquo;</h4>
                       <p className="text-xs sm:text-sm text-gray-600">Digunakan {keyword.frequency} kali</p>
                     </div>
                   </div>
@@ -203,30 +203,43 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-2 sm:mb-3">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-3 sm:mb-3 py-5">
                   <div className="text-center">
                     <div className="text-sm sm:text-lg font-semibold text-gray-900">{Math.round(keyword.avgViews).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">Rata-rata Views</div>
+                    <div className="text-xs text-gray-500 leading-tight">Rata-rata Views</div>
                   </div>
                   <div className="text-center">
                     <div className="text-sm sm:text-lg font-semibold text-gray-900">{Math.round(keyword.avgLikes).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">Rata-rata Likes</div>
+                    <div className="text-xs text-gray-500 leading-tight">Rata-rata Likes</div>
                   </div>
                   <div className="text-center">
                     <div className="text-sm sm:text-lg font-semibold text-gray-900">{Math.round(keyword.avgComments).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">Rata-rata Komentar</div>
+                    <div className="text-xs text-gray-500 leading-tight">Rata-rata Komentar</div>
                   </div>
                 </div>
 
                 {keyword.videos.length > 0 && (
                   <div>
                     <p className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Video dengan kata kunci ini:</p>
-                    <div className="space-y-1 sm:space-y-2">
+                    <div className="space-y-2 sm:space-y-2">
                       {keyword.videos.slice(0, 3).map((video, videoIndex) => (
-                        <div key={`${keyword.keyword}-${video.id}-${videoIndex}`} className="text-xs sm:text-sm text-gray-600 bg-gray-50 rounded p-2">
-                          <div className="font-medium truncate text-xs sm:text-sm">{video.title}</div>
-                          <div className="text-xs text-gray-500">
-                            {video.views.toLocaleString()} views • {video.likes.toLocaleString()} likes
+                        <div key={`${keyword.keyword}-${video.id}-${videoIndex}`} className="text-xs sm:text-sm text-gray-600 bg-gray-50 rounded-lg p-3 border border-gray-100">
+                          <div className="font-medium text-gray-900 text-xs sm:text-sm mb-1 leading-relaxed">{video.title}</div>
+                          <div className="text-xs text-gray-500 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                            <span className="flex items-center gap-1">
+                              <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              {video.views.toLocaleString()} views
+                            </span>
+                            <span className="hidden sm:inline text-gray-400">•</span>
+                            <span className="flex items-center gap-1">
+                              <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                              </svg>
+                              {video.likes.toLocaleString()} likes
+                            </span>
                           </div>
                         </div>
                       ))}
@@ -245,19 +258,19 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
           <div className="grid gap-3 sm:gap-4">
             {insights.trendingHashtags.map((hashtag) => (
               <div key={hashtag.hashtag} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="flex items-start justify-between mb-3">
                   <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                     <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold flex-shrink-0">
                       #
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{hashtag.hashtag}</h4>
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight mb-1">{hashtag.hashtag}</h4>
                       <p className="text-xs sm:text-sm text-gray-600">Digunakan {hashtag.frequency} kali</p>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1 flex-shrink-0 ml-2">
                     {hashtag.trending && (
-                      <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full border border-red-200">
+                      <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full border border-red-200">
                         🔥 Hot
                       </span>
                     )}
@@ -265,21 +278,27 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
                   </div>
                 </div>
 
-                <div className="flex justify-center mb-2 sm:mb-3">
+                <div className="flex justify-center mb-3">
                   <div className="text-center">
                     <div className="text-sm sm:text-lg font-semibold text-gray-900">{Math.round(hashtag.avgViews).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500">Rata-rata Views</div>
+                    <div className="text-xs text-gray-500 leading-tight">Rata-rata Views</div>
                   </div>
                 </div>
 
                 {hashtag.videos.length > 0 && (
                   <div>
                     <p className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Video dengan hashtag ini:</p>
-                    <div className="space-y-1 sm:space-y-2">
+                    <div className="space-y-2 sm:space-y-2">
                       {hashtag.videos.map((video, videoIndex) => (
-                        <div key={`${hashtag.hashtag}-${video.id}-${videoIndex}`} className="text-xs sm:text-sm text-gray-600 bg-gray-50 rounded p-2">
-                          <div className="font-medium truncate text-xs sm:text-sm">{video.title}</div>
-                          <div className="text-xs text-gray-500">{video.views.toLocaleString()} views</div>
+                        <div key={`${hashtag.hashtag}-${video.id}-${videoIndex}`} className="text-xs sm:text-sm text-gray-600 bg-gray-50 rounded-lg p-3 border border-gray-100">
+                          <div className="font-medium text-gray-900 text-xs sm:text-sm mb-1 leading-relaxed">{video.title}</div>
+                          <div className="text-xs text-gray-500 flex items-center gap-1">
+                            <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            {video.views.toLocaleString()} views
+                          </div>
                         </div>
                       ))}
                     </div>
