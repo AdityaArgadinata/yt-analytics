@@ -180,8 +180,8 @@ export async function GET(request: NextRequest) {
         suggestedHashtags: ['#tutorial', '#tips', '#guide', '#howto', '#learn'],
         insights: [
           'Kata kunci "tutorial" menunjukkan performa terbaik dengan rata-rata 25,000 views per video.',
-          'Hashtag #tutorial, #tips sedang trending di channel Anda.',
-          'Anda konsisten menggunakan kata kunci "tutorial" yang muncul 15 kali.',
+          'Hashtag #tutorial, #tips sedang trending di channel ini.',
+          'Channel ini konsisten menggunakan kata kunci "tutorial" yang muncul 15 kali.',
           'Kata kunci "guide" memiliki performa tinggi tapi jarang digunakan. Pertimbangkan untuk menggunakannya lebih sering.'
         ]
       },

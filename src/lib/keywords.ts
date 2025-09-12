@@ -283,13 +283,13 @@ export function generateRecommendations(keywords: KeywordData[], hashtags: Hasht
 
   // Insight tentang hashtag trending
   if (trendingHashtags.length > 0) {
-    insights.push(`Hashtag ${trendingHashtags.slice(0, 3).map(h => h.hashtag).join(', ')} sedang trending di channel Anda.`);
+    insights.push(`Hashtag ${trendingHashtags.slice(0, 3).map(h => h.hashtag).join(', ')} sedang trending di channel ini.`);
   }
 
   // Insight tentang konsistensi
   const consistentKeywords = keywords.filter(k => k.frequency >= 5);
   if (consistentKeywords.length > 0) {
-    insights.push(`Anda konsisten menggunakan kata kunci "${consistentKeywords[0].keyword}" yang muncul ${consistentKeywords[0].frequency} kali.`);
+    insights.push(`Channel ini konsisten kata kunci "${consistentKeywords[0].keyword}" yang muncul ${consistentKeywords[0].frequency} kali.`);
   }
 
   // Insight tentang opportunity
