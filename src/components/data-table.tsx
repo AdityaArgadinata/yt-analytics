@@ -3,13 +3,70 @@ import { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import type { VideoLite } from "@/types";
 
-type SortKey = "title" | "publishedAt" | "viewCount";
+type SortKey = "title" | "publishedAt" | "viewCount" | "type";
 type SortOrder = "asc" | "desc";
 const PAGE_SIZE = 20;
+
+// Helper function to convert ISO 8601 duration to seconds
+function parseDuration(duration?: string): number {
+  if (!duration) return 0;
+  
+  // YouTube duration format: PT#H#M#S, PT#M#S, PT#S
+  // Examples: PT4M13S (4 minutes 13 seconds), PT1H2M10S (1 hour 2 minutes 10 seconds)
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?/);
+  if (!match) return 0;
+  
+  const hours = parseInt(match[1] || '0', 10);
+  const minutes = parseInt(match[2] || '0', 10);
+  const seconds = parseFloat(match[3] || '0');
+  
+  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  
+  // Debug log untuk melihat parsing
+  console.log('Duration parsing:', { 
+    duration, 
+    hours, 
+    minutes, 
+    seconds, 
+    totalSeconds 
+  });
+  
+  return totalSeconds;
+}
+
+// Helper function to determine video type
+function getVideoType(duration?: string): 'Short' | 'Long' {
+  // If no duration data, assume it's a Long video (safer default)
+  if (!duration) {
+    console.log('No duration provided, defaulting to Long');
+    return 'Long';
+  }
+  
+  const durationInSeconds = parseDuration(duration);
+  
+  // If parsing failed (0 seconds), default to Long
+  if (durationInSeconds === 0) {
+    console.log('Duration parsing failed, defaulting to Long');
+    return 'Long';
+  }
+  
+  // YouTube Shorts are videos 60 seconds or less
+  const isShort = durationInSeconds <= 60;
+  
+  console.log('Video type detection:', { 
+    duration, 
+    durationInSeconds, 
+    isShort,
+    type: isShort ? 'Short' : 'Long'
+  });
+  
+  return isShort ? 'Short' : 'Long';
+}
 
 export default function DataTable({ videos }: { videos: VideoLite[] }) {
   function handleExportExcel() {
     const data = videos.map((v) => ({
+      "Tipe": getVideoType(v.duration),
       "Judul Video": v.title,
       "Tanggal Upload":
         new Date(v.publishedAt).toLocaleString("id-ID", {
@@ -55,6 +112,10 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
         new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
     } else if (sortKey === "viewCount") {
       cmp = a.viewCount - b.viewCount;
+    } else if (sortKey === "type") {
+      const typeA = getVideoType(a.duration);
+      const typeB = getVideoType(b.duration);
+      cmp = typeA.localeCompare(typeB);
     }
     return sortOrder === "asc" ? cmp : -cmp;
   });
@@ -114,6 +175,17 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
             <tr>
               <th
                 className="px-4 py-3 cursor-pointer select-none border-b border-slate-200 hover:bg-emerald-100 transition-colors"
+                onClick={() => handleSort("type")}
+              >
+                <div className="flex items-center gap-2">
+                  Tipe
+                  <span className="text-emerald-600">
+                    {sortKey === "type" && (sortOrder === "asc" ? "▲" : "▼")}
+                  </span>
+                </div>
+              </th>
+              <th
+                className="px-4 py-3 cursor-pointer select-none border-b border-slate-200 hover:bg-emerald-100 transition-colors"
                 onClick={() => handleSort("title")}
               >
                 <div className="flex items-center gap-2">
@@ -155,6 +227,12 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
                   i % 2 === 0 ? "bg-white" : "bg-slate-100"
                 } hover:bg-emerald-50 transition-colors`}
               >
+                <td className="px-4 py-3 border-r border-slate-200 align-top">
+                  <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <span>{getVideoType(v.duration) === 'Short' ? '📱' : '🎬'}</span>
+                    <span>{getVideoType(v.duration)}</span>
+                  </div>
+                </td>
                 <td className="px-4 py-3 border-r border-slate-200 align-top">
                   <div className="font-medium text-slate-900 leading-snug text-sm sm:text-base" title={v.title}>
                     {v.title}

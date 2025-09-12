@@ -3,6 +3,7 @@ id: string;
 title: string;
 publishedAt: string; // ISO
 viewCount: number;
+duration?: string; // ISO 8601 duration format (PT1M30S)
 };
 
 

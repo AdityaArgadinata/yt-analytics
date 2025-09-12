@@ -14,6 +14,9 @@ interface YouTubeVideoItem {
   statistics?: {
     viewCount?: string;
   };
+  contentDetails?: {
+    duration?: string;
+  };
 }
 
 const KEY = process.env.YOUTUBE_API_KEY || "";
@@ -206,6 +209,7 @@ export async function getVideoStats(
     title: string;
     publishedAt: string;
     viewCount: number;
+    duration?: string;
   }[] = [];
 
   console.log("[YT] getVideoStats: start", { count: videoIds.length });
@@ -214,7 +218,7 @@ export async function getVideoStats(
     const chunk = videoIds.slice(i, i + 50);
     const ids = chunk.map((v) => v.id).join(",");
     const url = `${API}/videos?${qs({
-      part: "statistics,snippet",
+      part: "statistics,snippet,contentDetails",
       id: ids,
       maxResults: 50,
       key: KEY,
@@ -231,6 +235,7 @@ export async function getVideoStats(
         title: (it?.snippet?.title as string) ?? v.title,
         publishedAt: (it?.snippet?.publishedAt as string) ?? v.publishedAt,
         viewCount: Number(it?.statistics?.viewCount ?? 0),
+        duration: it?.contentDetails?.duration,
       });
     }
   }
