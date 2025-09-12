@@ -164,12 +164,11 @@ export default function HomePage() {
           ) : (
             <>
               <SubscriptionStatus />
-              <form onSubmit={onSearch} className="flex items-center gap-4">
+              <form onSubmit={onSearch} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <div className="relative w-full">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
                     <svg
-                      width="20"
-                      height="20"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -180,7 +179,7 @@ export default function HomePage() {
                     </svg>
                   </span>
                   <input
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-300 bg-gray-50/50 backdrop-blur-sm outline-none ring-emerald-400/50 focus:ring-2 focus:bg-white focus:border-emerald-400 transition-all text-gray-900 placeholder:text-gray-400 text-lg"
+                    className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 rounded-lg sm:rounded-xl border border-gray-300 bg-gray-50/50 backdrop-blur-sm outline-none ring-emerald-400/50 focus:ring-2 focus:bg-white focus:border-emerald-400 transition-all text-gray-900 placeholder:text-gray-400 text-sm sm:text-lg"
                     placeholder="Cari channel YouTube..."
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
@@ -192,14 +191,12 @@ export default function HomePage() {
                   disabled={
                     loading || !q.trim() || subscription.status !== "active"
                   }
-                  className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-8 py-4 font-semibold text-white shadow-lg hover:shadow-emerald-500/25 hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-3"
+                  className="rounded-lg sm:rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-6 sm:px-8 py-3 sm:py-4 font-semibold text-white shadow-lg hover:shadow-emerald-500/25 hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base whitespace-nowrap"
                 >
                   {loading ? (
-                    <span className="flex items-center gap-3">
+                    <span className="flex items-center gap-2 sm:gap-3">
                       <svg
-                        className="animate-spin"
-                        width="20"
-                        height="20"
+                        className="animate-spin w-4 h-4 sm:w-5 sm:h-5"
                         viewBox="0 0 24 24"
                       >
                         <circle
@@ -218,20 +215,11 @@ export default function HomePage() {
                           fill="none"
                         />
                       </svg>
-                      Menganalisis...
+                      <span className="hidden sm:inline">Menganalisis...</span>
+                      <span className="sm:hidden">Analisis...</span>
                     </span>
                   ) : (
-                    <span className="flex items-center gap-3">
-                      <svg
-                        width="20"
-                        height="20"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
+                    <span className="flex items-center gap-2 sm:gap-3">
                       Analisis
                     </span>
                   )}
