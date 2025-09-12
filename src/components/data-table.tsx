@@ -63,11 +63,29 @@ function getVideoType(duration?: string): 'Short' | 'Long' {
     return 'Long';
   }
   
-  // YouTube Shorts are videos 60 seconds or less
-  // Be more explicit about the classification
-  const isShort = durationInSeconds > 0 && durationInSeconds <= 60;
+  // YouTube Shorts are videos 3 minutes (180 seconds) or less
+  // Updated from 60 seconds to 180 seconds (3 minutes)
+  const isShort = durationInSeconds > 0 && durationInSeconds <= 180;
   
   return isShort ? 'Short' : 'Long';
+}
+
+// Helper function to format duration for display
+function formatDuration(duration?: string): string {
+  if (!duration) return 'N/A';
+  
+  const totalSeconds = parseDuration(duration);
+  if (totalSeconds === 0) return 'N/A';
+  
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+  
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  } else {
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
 }
 
 // Test function to validate duration parsing (for debugging)
@@ -75,15 +93,18 @@ function testDurationParsing() {
   const testCases = [
     { duration: 'PT30S', expected: 30, type: 'Short' },
     { duration: 'PT1M', expected: 60, type: 'Short' },
-    { duration: 'PT1M30S', expected: 90, type: 'Long' },
-    { duration: 'PT2M', expected: 120, type: 'Long' },
+    { duration: 'PT1M30S', expected: 90, type: 'Short' },
+    { duration: 'PT2M', expected: 120, type: 'Short' },
+    { duration: 'PT3M', expected: 180, type: 'Short' },
+    { duration: 'PT3M1S', expected: 181, type: 'Long' },
+    { duration: 'PT4M', expected: 240, type: 'Long' },
     { duration: 'PT1H', expected: 3600, type: 'Long' },
     { duration: 'PT1H2M3S', expected: 3723, type: 'Long' },
     { duration: '', expected: 0, type: 'Long' },
     { duration: 'PT0S', expected: 0, type: 'Long' },
   ];
   
-  console.log('=== Duration Parsing Test Results ===');
+  console.log('=== Duration Parsing Test Results (Updated: 3 minutes threshold) ===');
   testCases.forEach(({ duration, expected, type }) => {
     const parsed = parseDuration(duration);
     const classified = getVideoType(duration);
@@ -99,20 +120,31 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
   }, []);
 
   function handleExportExcel() {
-    const data = videos.map((v) => ({
-      "Tipe": getVideoType(v.duration),
-      "Judul Video": v.title,
-      "Tanggal Upload":
-        new Date(v.publishedAt).toLocaleString("id-ID", {
-          timeZone: "Asia/Jakarta",
-          year: "numeric",
-          month: "short",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        }) + " - WIB",
-      Views: v.viewCount,
-    }));
+    const data = videos.map((v) => {
+      const date = new Date(v.publishedAt);
+      const formattedDate = date.toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const dayName = date.toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        weekday: "long",
+      });
+      
+      return {
+        "Tipe": getVideoType(v.duration),
+        "Judul Video": v.title,
+        "Tanggal Upload": `${formattedDate} - WIB`,
+        "Hari": dayName,
+        "Durasi": formatDuration(v.duration),
+        "Durasi Raw": v.duration || 'N/A',
+        Views: v.viewCount,
+      };
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -126,6 +158,7 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [page, setPage] = useState(1);
   const [clientDates, setClientDates] = useState<string[]>([]);
+  const [clientDays, setClientDays] = useState<string[]>([]);
 
   function handleSort(key: SortKey) {
     if (sortKey === key) {
@@ -173,10 +206,19 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
         })
       )
     );
+    
+    setClientDays(
+      pagedVideos.map((v) =>
+        new Date(v.publishedAt).toLocaleString("id-ID", {
+          timeZone: "Asia/Jakarta",
+          weekday: "long",
+        }).toLowerCase()
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, sortKey, sortOrder, videos]);
 
-  if (clientDates.length !== pagedVideos.length) {
+  if (clientDates.length !== pagedVideos.length || clientDays.length !== pagedVideos.length) {
     return <div className="text-center py-8 text-slate-500">Memuat data…</div>;
   }
 
@@ -240,6 +282,11 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
                   </span>
                 </div>
               </th>
+              <th className="px-4 py-3 border-b border-slate-200 text-center">
+                <div className="text-slate-700">
+                  Durasi
+                </div>
+              </th>
               <th
                 className="px-4 py-3 text-right cursor-pointer select-none border-b border-slate-200 hover:bg-emerald-100 transition-colors"
                 onClick={() => handleSort("viewCount")}
@@ -275,7 +322,15 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
                   </div>
                 </td>
                 <td className="px-4 py-3 border-r border-slate-200 whitespace-nowrap align-top text-slate-600">
-                  <div className="text-xs sm:text-sm">{clientDates[i]} - WIB</div>
+                  <div className="flex flex-col gap-1">
+                    <div className="text-xs sm:text-sm">{clientDates[i]} - WIB</div>
+                    <div className="text-xs font-bold text-slate-500 capitalize">{clientDays[i]}</div>
+                  </div>
+                </td>
+                <td className="px-4 py-3 border-r border-slate-200 text-center align-top">
+                  <div className="text-sm font-medium text-slate-700">
+                    {formatDuration(v.duration)}
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums align-top">
                   <div className="font-semibold text-slate-800 text-sm sm:text-base">
