@@ -104,13 +104,6 @@ export default function DemoPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
-      {/* Experimental Ribbon */}
-      <div className="fixed top-6 right-6 z-[9999]">
-        <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-2 rounded-lg shadow-xl transform rotate-12 hover:rotate-6 transition-transform duration-300 border-2 border-white">
-          <span className="text-xs font-bold italic tracking-wider uppercase">Experimental</span>
-        </div>
-      </div>
-
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -299,7 +292,7 @@ export default function DemoPage() {
         )}
 
         {activeTab === "keywords" && (
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

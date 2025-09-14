@@ -45,7 +45,6 @@ export default function HomePage() {
         const { data, ts } = JSON.parse(cached);
         if (Date.now() - ts < 3600_000) {
           setData(data);
-          setShowChannelAnalysis(false); // Hide form when data loads
           setShowTrendingAnalysis(false);
           return; // Use cached data, no need to make API call
         } else {
@@ -62,7 +61,6 @@ export default function HomePage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed");
       setData(json as AnalyzeResponse);
-      setShowChannelAnalysis(false); // Hide form when data loads
       setShowTrendingAnalysis(false);
       // Save only results to localStorage with timestamp, not the query input
       localStorage.setItem(key, JSON.stringify({ data: json, ts: Date.now() }));
@@ -338,8 +336,9 @@ export default function HomePage() {
                       setShowTrendingAnalysis(false);
                       setQ("");
                       setError(null);
+                      setData(null);
                     }}
-                    className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg flex items-center gap-2 transition-colors w-auto"
+                    className="px-5 py-2 bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg flex items-center gap-2 transition-colors w-auto"
                   >
                     <svg
                       className="w-4 h-4"
@@ -553,35 +552,6 @@ export default function HomePage() {
               {/* Show data results */}
               {data && (
                 <div className="space-y-8">
-                  {/* Back Button */}
-                  <div className="flex items-center justify-between">
-                    <button
-                      onClick={() => {
-                        setData(null);
-                        setQ("");
-                        setError(null);
-                        setShowChannelAnalysis(false);
-                        setShowTrendingAnalysis(false);
-                      }}
-                      className="flex items-center gap-2 text-gray-600 hover:text-gray-800 font-medium"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 19l-7-7 7-7"
-                        />
-                      </svg>
-                      Kembali ke Menu Utama
-                    </button>
-                  </div>
-
                   <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-6">
                     <ChannelHeader channel={data.channel} />
                   </div>
