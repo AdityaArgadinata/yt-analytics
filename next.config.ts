@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'i.ytimg.com' },     // thumbnails
       { protocol: 'https', hostname: 'img.youtube.com' }, // thumbnails lama
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' }, // kadang dipakai Google
+      { protocol: 'https', hostname: 'via.placeholder.com' }, // placeholder images for demo
+      { protocol: 'https', hostname: 'images.unsplash.com' }, // unsplash images for demo
     ],
     // atau kalau mau paling simpel tanpa optimasi:
     // unoptimized: true,

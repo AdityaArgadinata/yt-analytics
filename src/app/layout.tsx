@@ -3,9 +3,9 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "YouTube Channel Analytics",
+  title: "YoutubePro - Advanced YouTube Analytics",
   description:
-    "Search any channel and see analytics from the latest 500 videos.",
+    "Professional YouTube analytics platform. Analyze channel performance, trending keywords, and content strategy with real-time data.",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
               <footer className="w-full border-t border-slate-200 bg-white py-6 mt-8">
                 <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-slate-600 text-sm">
                   <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
-                    <span>&copy; {new Date().getFullYear()} YT Analytics. All rights reserved.</span>
+                    <span>&copy; {new Date().getFullYear()} YoutubePro. All rights reserved.</span>
                     <div className="flex items-center gap-4">
                       <a 
                         href="/privacy" 
