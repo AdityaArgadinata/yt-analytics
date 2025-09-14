@@ -76,6 +76,12 @@ export default function HomePage() {
               <p className="text-gray-600 mt-1 text-sm sm:text-base">
                 Wawasan profesional untuk kreator konten
               </p>
+              <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                Educational tool for public YouTube data analysis under fair use
+              </p>
             </div>
             <div className="flex-shrink-0 w-full sm:w-auto">
               <AuthButton />
@@ -193,7 +199,7 @@ export default function HomePage() {
                   disabled={
                     loading || !q.trim() || subscription.status !== "active"
                   }
-                  className="rounded-lg sm:rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-6 sm:px-8 py-3 sm:py-4 font-semibold text-white shadow-lg hover:shadow-emerald-500/25 hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base whitespace-nowrap"
+                  className="rounded-lg sm:rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-6 sm:px-8 py-3 sm:py-4 font-semibold text-white shadow-lg hover:shadow-emerald-500/25 hover:scale-90 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base whitespace-nowrap"
                 >
                   {loading ? (
                     <span className="flex items-center gap-2 sm:gap-3">
@@ -259,7 +265,7 @@ export default function HomePage() {
                     onClick={() => setActiveTab('analytics')}
                     className={`flex-1 sm:flex-none py-3 px-4 sm:px-6 border-2 font-bold text-sm whitespace-nowrap flex flex-col sm:flex-row items-center gap-2 transition-all duration-200 rounded-xl shadow-sm ${
                       activeTab === 'analytics'
-                        ? 'border-emerald-500 text-emerald-700 bg-emerald-50 shadow-emerald-200/50'
+                        ? 'border-emerald-500 bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md hover:shadow-lg hover:scale-90'
                         : 'border-gray-300 text-gray-600 bg-white hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50 hover:shadow-md'
                     }`}
                   >
@@ -275,7 +281,7 @@ export default function HomePage() {
                     onClick={() => setActiveTab('keywords')}
                     className={`flex-1 sm:flex-none py-3 px-4 sm:px-6 border-2 font-bold text-sm whitespace-nowrap flex flex-col sm:flex-row items-center gap-2 transition-all duration-200 rounded-xl shadow-sm relative ${
                       activeTab === 'keywords'
-                        ? 'border-emerald-500 text-emerald-700 bg-emerald-50 shadow-emerald-200/50'
+                        ? 'border-emerald-500 bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md hover:shadow-lg hover:scale-90'
                         : 'border-gray-300 text-gray-600 bg-white hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50 hover:shadow-md'
                     }`}
                   >
@@ -285,7 +291,11 @@ export default function HomePage() {
                     <div className="text-center sm:text-left">
                       <div className="text-sm font-bold flex items-center justify-center sm:justify-start gap-1">
                         Keywords
-                        <span className="px-1.5 py-0.5 bg-emerald-500 text-white text-xs rounded-full font-bold">
+                        <span className={`px-1.5 py-0.5 text-xs rounded-full font-bold ${
+                          activeTab === 'keywords' 
+                            ? 'bg-white text-emerald-600' 
+                            : 'bg-emerald-500 text-white'
+                        }`}>
                           NEW
                         </span>
                       </div>

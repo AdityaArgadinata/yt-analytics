@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
 import type { VideoLite } from "@/types";
 
@@ -119,6 +119,20 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
     testDurationParsing();
   }, []);
 
+  // Ref for smooth scrolling to table top
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  // Function to scroll to top of table smoothly
+  const scrollToTableTop = () => {
+    if (tableRef.current) {
+      tableRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
   function handleExportExcel() {
     const data = videos.map((v) => {
       const date = new Date(v.publishedAt);
@@ -168,7 +182,20 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
       setSortOrder("desc");
     }
     setPage(1); // reset to first page on sort
+    // Scroll to top when sorting
+    setTimeout(() => scrollToTableTop(), 100);
   }
+
+  // Handle pagination with smooth scroll
+  const handlePrevPage = () => {
+    setPage(page - 1);
+    setTimeout(() => scrollToTableTop(), 100);
+  };
+
+  const handleNextPage = () => {
+    setPage(page + 1);
+    setTimeout(() => scrollToTableTop(), 100);
+  };
 
   const sortedVideos = [...videos].sort((a, b) => {
     let cmp = 0;
@@ -223,7 +250,7 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
   }
 
   return (
-    <div className="font-apple">
+    <div className="font-apple" ref={tableRef}>
       <div className="flex justify-between items-center mb-5">
         <h3 className="text-lg font-semibold text-slate-900">Data Video</h3>
         <button
@@ -298,6 +325,11 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
                   </span>
                 </div>
               </th>
+              <th className="px-4 py-3 text-center border-b border-slate-200">
+                <div className="text-slate-700">
+                  Link
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
@@ -332,27 +364,44 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
                     {formatDuration(v.duration)}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-right tabular-nums align-top">
+                <td className="px-4 py-3 text-right tabular-nums align-top border-r border-slate-200">
                   <div className="font-semibold text-slate-800 text-sm sm:text-base">
                     {v.viewCount.toLocaleString()}
                   </div>
                   <div className="text-xs text-slate-500">views</div>
                 </td>
+                <td className="px-4 py-3 text-center align-top">
+                  <a
+                    href={`https://www.youtube.com/watch?v=${v.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors duration-200 hover:scale-105 transform"
+                    title={`Tonton: ${v.title}`}
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                  </a>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 bg-emerald-50/50 border-t border-slate-200 gap-3">
-          <span className="text-sm text-slate-600 font-medium">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-10 bg-emerald-50/50 border-t border-slate-200 gap-3">
+          <span className="text-sm text-emerald-600 font-medium">
             Menampilkan {(page - 1) * PAGE_SIZE + 1} -{" "}
             {Math.min(page * PAGE_SIZE, sortedVideos.length)} dari{" "}
             {sortedVideos.length} video
           </span>
           <div className="flex items-center gap-3">
             <button
-              className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-600 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-medium shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200"
               disabled={page === 1}
-              onClick={() => setPage(page - 1)}
+              onClick={handlePrevPage}
             >
               ← Prev
             </button>
@@ -360,9 +409,9 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
               {page} / {totalPages}
             </span>
             <button
-              className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-600 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-medium shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200"
               disabled={page === totalPages}
-              onClick={() => setPage(page + 1)}
+              onClick={handleNextPage}
             >
               Next →
             </button>

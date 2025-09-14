@@ -22,8 +22,32 @@ export default function RootLayout({
               </div>
               <footer className="w-full border-t border-slate-200 bg-white py-6 mt-8">
                 <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-slate-600 text-sm">
-                  <span>&copy; {new Date().getFullYear()} YT Analytics. All rights reserved.</span>
-                  <span className="mt-2 md:mt-0">Made with <span className="text-red-500">&#10084;</span> by YouTube-Pro Analytics</span>
+                  <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                    <span>&copy; {new Date().getFullYear()} YT Analytics. All rights reserved.</span>
+                    <div className="flex items-center gap-4">
+                      <a 
+                        href="/privacy" 
+                        className="hover:text-slate-900 transition-colors underline"
+                      >
+                        Privacy Policy
+                      </a>
+                      <a 
+                        href="/terms" 
+                        className="hover:text-slate-900 transition-colors underline"
+                      >
+                        Terms of Service
+                      </a>
+                      <a 
+                        href="https://www.youtube.com/t/terms" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-slate-900 transition-colors underline"
+                      >
+                        YouTube Terms
+                      </a>
+                    </div>
+                  </div>
+                  <span className="mt-2 md:mt-0">Made with <span className="text-red-500">&#10084;</span> for Fair Use Analytics</span>
                 </div>
               </footer>
             </AuthProvider>
