@@ -34,6 +34,7 @@ export default function ChannelHeader({ channel }: { channel: ChannelBasics }) {
 							src={channel.thumbnails.high} 
 							alt={`${channel.title} banner`} 
 							fill 
+							sizes="100vw"
 							className="object-cover opacity-80" 
 						/>
 					</div>

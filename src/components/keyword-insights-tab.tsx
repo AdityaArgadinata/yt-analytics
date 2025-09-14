@@ -7,6 +7,76 @@ interface KeywordInsightsTabProps {
   channelTitle: string;
 }
 
+// Filter untuk kata-kata yang tidak relevan
+const FILTERED_KEYWORDS = new Set([
+  // URL components
+  'https', 'http', 'www', 'com', 'org', 'net', 'co', 'id', 'url', 'link', 'website',
+  
+  // Social media platforms
+  'instagram', 'facebook', 'twitter', 'tiktok', 'discord', 'telegram', 'whatsapp', 'linkedin',
+  
+  // YouTube specific
+  'youtube', 'yt', 'video', 'channel', 'subscribe', 'like', 'comment', 'share', 'playlist',
+  'shorts', 'live', 'stream', 'streaming', 'upload', 'thumbnail', 'description', 'title',
+  'views', 'subscriber', 'membership', 'monetization', 'ad', 'ads', 'revenue',
+  
+  // Generic tech terms
+  'app', 'application', 'software', 'platform', 'website', 'digital', 'online', 'internet',
+  'browser', 'mobile', 'desktop', 'download', 'install', 'update', 'version',
+  
+  // Common words
+  'and', 'or', 'but', 'the', 'a', 'an', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
+  'dari', 'ke', 'di', 'dan', 'atau', 'yang', 'adalah', 'ini', 'itu', 'untuk', 'dengan',
+  
+  // Time related
+  'today', 'yesterday', 'tomorrow', 'hari', 'minggu', 'bulan', 'tahun', 'jam', 'menit', 'detik',
+  
+  // Actions
+  'click', 'tap', 'press', 'open', 'close', 'start', 'stop', 'pause', 'play', 'replay',
+  'klik', 'tekan', 'buka', 'tutup', 'mulai', 'berhenti', 'jeda', 'putar', 'ulang',
+  
+  // Generic terms
+  'free', 'premium', 'pro', 'plus', 'basic', 'standard', 'advanced', 'gratis', 'berbayar'
+]);
+
+// Function to filter relevant keywords
+const filterRelevantKeywords = (keywords: Array<{
+  keyword: string;
+  frequency: number;
+  performance: 'high' | 'medium' | 'low';
+  avgViews: number;
+  avgLikes: number;
+  avgComments: number;
+  videos: Array<{ id: string; title: string; views: number; likes: number; }>;
+}>) => {
+  return keywords.filter(item => {
+    const keyword = item.keyword.toLowerCase().trim();
+    
+    // Filter out single characters or very short words
+    if (keyword.length < 3) return false;
+    
+    // Filter out URLs and domains
+    if (keyword.includes('.') && (keyword.includes('http') || keyword.includes('www'))) return false;
+    
+    // Filter out common non-content keywords
+    if (FILTERED_KEYWORDS.has(keyword)) return false;
+    
+    // Filter out pure numbers
+    if (/^\d+$/.test(keyword)) return false;
+    
+    // Filter out email-like patterns
+    if (keyword.includes('@')) return false;
+    
+    // Filter out hashtag symbols (keep the content)
+    if (keyword.startsWith('#') && keyword.length === 1) return false;
+    
+    // Keep keywords with good frequency (more than 1 occurrence)
+    if (item.frequency < 2) return false;
+    
+    return true;
+  });
+};
+
 export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProps) {
   const { insights, loading, error, refreshInsights, getCacheStatus, lastFetchType } = useKeywordInsights(channelId);
   const [selectedTab, setSelectedTab] = useState<'keywords' | 'hashtags' | 'recommendations'>('keywords');
@@ -184,10 +254,20 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
       {/* Tab Content */}
       {selectedTab === 'keywords' && (
         <div className="space-y-3 sm:space-y-4">
-          <h3 className="text-base sm:text-lg font-semibold text-gray-900 px-1">Kata Kunci Teratas</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 px-1">Kata Kunci Teratas</h3>
+            <div className="flex items-center gap-2 px-1">
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <span>Terfilter dari noise & URL</span>
+              </div>
+            </div>
+          </div>
           <div className="grid gap-3 sm:gap-4">
-            {insights.topKeywords.map((keyword, index) => (
-              <div key={keyword.keyword} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow">
+            {filterRelevantKeywords(insights.topKeywords).slice(0, 10).map((keyword, index) => (
+              <div key={keyword.keyword} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow relative">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
                     <div className="w-6 h-6 sm:w-8 sm:h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold flex-shrink-0">
@@ -195,7 +275,14 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
                     </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight mb-1">&ldquo;{keyword.keyword}&rdquo;</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Digunakan {keyword.frequency} kali</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-xs sm:text-sm text-gray-600">Digunakan {keyword.frequency} kali</p>
+                        {keyword.frequency >= 5 && (
+                          <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full border border-emerald-200">
+                            ⭐ Konsisten
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="flex-shrink-0 ml-2">
@@ -248,15 +335,49 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
                 )}
               </div>
             ))}
+            
+            {/* Show notice if many keywords were filtered */}
+            {insights.topKeywords.length > filterRelevantKeywords(insights.topKeywords).length && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <p className="text-sm sm:text-base font-medium text-blue-900 mb-1">Smart Filtering Applied</p>
+                    <p className="text-xs sm:text-sm text-blue-800">
+                      Kami telah memfilter {insights.topKeywords.length - filterRelevantKeywords(insights.topKeywords).length} kata kunci yang tidak relevan 
+                      (URL, nama platform, kata umum) untuk menampilkan insights yang lebih meaningful.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {selectedTab === 'hashtags' && (
         <div className="space-y-3 sm:space-y-4">
-          <h3 className="text-base sm:text-lg font-semibold text-gray-900 px-1">Hashtag Trending</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 px-1">Hashtag Trending</h3>
+            <div className="flex items-center gap-2 px-1">
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                <span>Content-focused hashtags</span>
+              </div>
+            </div>
+          </div>
           <div className="grid gap-3 sm:gap-4">
-            {insights.trendingHashtags.map((hashtag) => (
+            {insights.trendingHashtags
+              .filter(hashtag => {
+                const tag = hashtag.hashtag.toLowerCase().replace('#', '');
+                return !FILTERED_KEYWORDS.has(tag) && tag.length > 2 && hashtag.frequency >= 2;
+              })
+              .slice(0, 8)
+              .map((hashtag) => (
               <div key={hashtag.hashtag} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0">
@@ -265,7 +386,14 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
                     </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight mb-1">{hashtag.hashtag}</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Digunakan {hashtag.frequency} kali</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-xs sm:text-sm text-gray-600">Digunakan {hashtag.frequency} kali</p>
+                        {hashtag.frequency >= 3 && (
+                          <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full border border-blue-200">
+                            📈 Populer
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1 flex-shrink-0 ml-2">
@@ -337,9 +465,22 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
             <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
               <span className="text-base sm:text-lg">🔤</span>
               <span className="text-sm sm:text-base">Kata Kunci yang Disarankan</span>
+              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full border border-emerald-200">
+                Filtered
+              </span>
             </h4>
             <div className="flex flex-wrap gap-2">
-              {insights.recommendations.suggestedKeywords.map((keyword, index) => (
+              {insights.recommendations.suggestedKeywords
+                .filter(keyword => {
+                  const cleanKeyword = keyword.toLowerCase().trim();
+                  return !FILTERED_KEYWORDS.has(cleanKeyword) && 
+                         cleanKeyword.length > 2 && 
+                         !cleanKeyword.includes('.') &&
+                         !cleanKeyword.includes('@') &&
+                         !/^\d+$/.test(cleanKeyword);
+                })
+                .slice(0, 15)
+                .map((keyword, index) => (
                 <span
                   key={`suggested-keyword-${keyword}-${index}`}
                   className="px-2 sm:px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs sm:text-sm font-medium border border-emerald-200 hover:bg-emerald-200 transition-colors cursor-pointer"
@@ -349,7 +490,8 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
               ))}
             </div>
             <p className="text-xs sm:text-sm text-gray-600 mt-3 leading-relaxed">
-              Kata kunci ini menunjukkan performa yang baik. Pertimbangkan untuk menggunakannya dalam judul dan deskripsi video Anda.
+              Kata kunci ini telah difilter dari noise (URL, platform names, dll) dan menunjukkan performa yang baik. 
+              Pertimbangkan untuk menggunakannya dalam judul dan deskripsi video Anda.
             </p>
           </div>
 
@@ -358,9 +500,22 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
             <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
               <span className="text-base sm:text-lg">#️⃣</span>
               <span className="text-sm sm:text-base">Hashtag yang Disarankan</span>
+              <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full border border-blue-200">
+                Curated
+              </span>
             </h4>
             <div className="flex flex-wrap gap-2">
-              {insights.recommendations.suggestedHashtags.map((hashtag, index) => (
+              {insights.recommendations.suggestedHashtags
+                .filter(hashtag => {
+                  const cleanHashtag = hashtag.toLowerCase().replace('#', '').trim();
+                  return !FILTERED_KEYWORDS.has(cleanHashtag) && 
+                         cleanHashtag.length > 2 &&
+                         !cleanHashtag.includes('.') &&
+                         !cleanHashtag.includes('@') &&
+                         !/^\d+$/.test(cleanHashtag);
+                })
+                .slice(0, 12)
+                .map((hashtag, index) => (
                 <span
                   key={`suggested-hashtag-${hashtag}-${index}`}
                   className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs sm:text-sm font-medium border border-blue-200 hover:bg-blue-200 transition-colors cursor-pointer"
@@ -370,7 +525,8 @@ export default function KeywordInsightsTab({ channelId }: KeywordInsightsTabProp
               ))}
             </div>
             <p className="text-xs sm:text-sm text-gray-600 mt-3 leading-relaxed">
-              Hashtag ini sedang trending atau menunjukkan engagement yang tinggi. Gunakan dalam deskripsi video untuk meningkatkan discoverability.
+              Hashtag content-focused yang sedang trending atau menunjukkan engagement tinggi. 
+              Gunakan dalam deskripsi video untuk meningkatkan discoverability.
             </p>
           </div>
         </div>

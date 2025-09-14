@@ -243,45 +243,60 @@ export default function HomePage() {
             </div>
             
             {/* Tab Navigation */}
-            <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-t-2xl shadow-xl">
-              <div className="border-b border-gray-200">
-                <nav className="flex px-3 sm:px-6 pt-3 sm:pt-6 overflow-x-auto scrollbar-hide -mb-px">
+            <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+              {/* Tab Header with clear visual separation */}
+              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4">
+                <h3 className="text-sm sm:text-sm font-bold text-emerald-700 flex items-center gap-2">
+                  Menu Analytics
+                </h3>
+                <p className="text-xs text-emerald-600 mt-1 font-medium">Pilih jenis analisis yang ingin ditampilkan</p>
+              </div>
+              
+              {/* Tab Buttons */}
+              <div className="bg-gray-50 border-b border-gray-200 px-2 sm:px-4 py-2">
+                <nav className="flex gap-2 overflow-x-auto scrollbar-hide">
                   <button
                     onClick={() => setActiveTab('analytics')}
-                    className={`pb-3 sm:pb-4 px-3 sm:px-4 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0 min-w-0 ${
+                    className={`flex-1 sm:flex-none py-3 px-4 sm:px-6 border-2 font-bold text-sm whitespace-nowrap flex flex-col sm:flex-row items-center gap-2 transition-all duration-200 rounded-xl shadow-sm ${
                       activeTab === 'analytics'
-                        ? 'border-emerald-500 text-emerald-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-emerald-500 text-emerald-700 bg-emerald-50 shadow-emerald-200/50'
+                        : 'border-gray-300 text-gray-600 bg-white hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50 hover:shadow-md'
                     }`}
                   >
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
-                    <span className="hidden sm:inline">Analytics Overview</span>
-                    <span className="sm:hidden">Analytics</span>
+                    <div className="text-center sm:text-left">
+                      <div className="text-sm font-bold">Analytics</div>
+                      <div className="text-xs opacity-75 hidden sm:block">Data statistik channel</div>
+                    </div>
                   </button>
                   <button
                     onClick={() => setActiveTab('keywords')}
-                    className={`pb-3 sm:pb-4 px-3 sm:px-4 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0 ml-3 sm:ml-8 min-w-0 ${
+                    className={`flex-1 sm:flex-none py-3 px-4 sm:px-6 border-2 font-bold text-sm whitespace-nowrap flex flex-col sm:flex-row items-center gap-2 transition-all duration-200 rounded-xl shadow-sm relative ${
                       activeTab === 'keywords'
-                        ? 'border-emerald-500 text-emerald-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-emerald-500 text-emerald-700 bg-emerald-50 shadow-emerald-200/50'
+                        : 'border-gray-300 text-gray-600 bg-white hover:border-emerald-400 hover:text-emerald-600 hover:bg-emerald-50/50 hover:shadow-md'
                     }`}
                   >
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
-                    <span className="hidden sm:inline">Keyword & Hashtag Insights</span>
-                    <span className="sm:hidden">Keywords</span>
-                    <span className="ml-1 sm:ml-2 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-emerald-100 text-emerald-800 text-xs rounded-full font-medium flex-shrink-0">
-                      NEW
-                    </span>
+                    <div className="text-center sm:text-left">
+                      <div className="text-sm font-bold flex items-center justify-center sm:justify-start gap-1">
+                        Keywords
+                        <span className="px-1.5 py-0.5 bg-emerald-500 text-white text-xs rounded-full font-bold">
+                          NEW
+                        </span>
+                      </div>
+                      <div className="text-xs opacity-75 hidden sm:block">Analisis kata kunci & hashtag</div>
+                    </div>
                   </button>
                 </nav>
               </div>
               
               {/* Tab Content */}
-              <div className="min-h-[400px]">
+              <div className="min-h-[400px] px-3 sm:px-6 py-3 sm:py-6">
                 {activeTab === 'analytics' && <AnalyticsTab data={data} />}
                 {activeTab === 'keywords' && (
                   <KeywordInsightsTab 
