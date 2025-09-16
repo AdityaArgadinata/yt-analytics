@@ -24,6 +24,19 @@ export function useSubscription() {
       return;
     }
 
+    // Special access for demo audit account - same as admin
+    if (user.email === 'auditanalystdemo@gmail.com' || user.email === 'aditdevelop@gmail.com') {
+      setSubscription({
+        status: 'active',
+        plan: 'pro',
+        expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
+        couponCode: 'SPECIAL_ACCESS',
+        activatedAt: new Date(),
+      });
+      setLoading(false);
+      return;
+    }
+
     const userRef = doc(db, 'users', user.uid);
     
     const unsubscribe = onSnapshot(userRef, (doc) => {
