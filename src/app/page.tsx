@@ -11,6 +11,7 @@ import CouponActivation from "@/components/CouponActivation";
 import SubscriptionStatus from "@/components/SubscriptionStatus";
 import { useAuth } from "@/context/AuthContext";
 import { useSubscription } from "@/hooks/useSubscription";
+import { safeLocalStorage } from "@/lib/hydration";
 import type { AnalyzeResponse } from "@/types";
 import { HiTrendingUp } from "react-icons/hi";
 
@@ -37,9 +38,9 @@ export default function HomePage() {
     e.preventDefault();
     if (!user || subscription.status !== "active") return;
 
-    // Check for cached results first
+    // Check for cached results first (only on client side)
     const key = `yt-analytics-cache-${q.trim().toLowerCase()}`;
-    const cached = localStorage.getItem(key);
+    const cached = safeLocalStorage.getItem(key);
     if (cached) {
       try {
         const { data, ts } = JSON.parse(cached);
@@ -48,7 +49,7 @@ export default function HomePage() {
           setShowTrendingAnalysis(false);
           return; // Use cached data, no need to make API call
         } else {
-          localStorage.removeItem(key); // Remove expired cache
+          safeLocalStorage.removeItem(key); // Remove expired cache
         }
       } catch {}
     }
@@ -62,8 +63,8 @@ export default function HomePage() {
       if (!res.ok) throw new Error(json.error || "Failed");
       setData(json as AnalyzeResponse);
       setShowTrendingAnalysis(false);
-      // Save only results to localStorage with timestamp, not the query input
-      localStorage.setItem(key, JSON.stringify({ data: json, ts: Date.now() }));
+      // Save only results to localStorage with timestamp, not the query input (client-side only)
+      safeLocalStorage.setItem(key, JSON.stringify({ data: json, ts: Date.now() }));
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Failed";
       setError(errorMessage);

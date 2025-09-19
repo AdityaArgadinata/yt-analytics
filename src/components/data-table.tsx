@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import * as XLSX from "xlsx";
 import type { VideoLite } from "@/types";
 
 type SortKey = "title" | "publishedAt" | "viewCount" | "type";
@@ -133,41 +132,6 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
     }
   };
 
-  function handleExportExcel() {
-    const data = videos.map((v) => {
-      const date = new Date(v.publishedAt);
-      const formattedDate = date.toLocaleString("id-ID", {
-        timeZone: "Asia/Jakarta",
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      const dayName = date.toLocaleString("id-ID", {
-        timeZone: "Asia/Jakarta",
-        weekday: "long",
-      });
-      
-      return {
-        "Tipe": getVideoType(v.duration),
-        "Judul Video": v.title,
-        "Tanggal Upload": `${formattedDate} - WIB`,
-        "Hari": dayName,
-        "Durasi": formatDuration(v.duration),
-        "Durasi Raw": v.duration || 'N/A',
-        Views: v.viewCount,
-      };
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Video Analytics");
-    XLSX.writeFile(
-      workbook,
-      `yt-analytics-${new Date().toISOString().split("T")[0]}.xlsx`
-    );
-  }
   const [sortKey, setSortKey] = useState<SortKey>("publishedAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [page, setPage] = useState(1);
@@ -251,27 +215,6 @@ export default function DataTable({ videos }: { videos: VideoLite[] }) {
 
   return (
     <div className="font-apple" ref={tableRef}>
-      <div className="flex justify-between items-center mb-5">
-        <h3 className="text-lg font-semibold text-slate-900">Data Video</h3>
-        <button
-          onClick={handleExportExcel}
-          className="text-sm rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-4 py-2 text-white shadow-lg hover:shadow-emerald-500/25 hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2"
-        >
-          <svg
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7,10 12,15 17,10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Export to Excel
-        </button>
-      </div>
       <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
         <table className="min-w-full text-sm border-collapse">
           <thead className="bg-emerald-50 text-left font-semibold text-slate-700">

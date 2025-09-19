@@ -30,9 +30,14 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!auth) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !auth) {
       setLoading(false);
       return;
     }
@@ -43,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [mounted]);
 
   const signInWithGoogle = async () => {
     if (!auth) {

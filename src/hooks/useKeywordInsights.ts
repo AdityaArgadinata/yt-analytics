@@ -8,21 +8,20 @@ interface CacheEntry {
 }
 
 /**
- * Custom hook for managing Keyword Insights with intelligent caching
+ * Custom hook for managing Keyword Insights with minimal caching for compliance
  * 
  * Features:
- * - In-memory caching for 5 minutes per channel
+ * - Short-term session caching (2 minutes max) to avoid excessive API calls
  * - Automatic cache expiration and cleanup
  * - Force refresh capability
- * - Cache status monitoring
- * - Prevents unnecessary API calls when switching tabs
+ * - Minimal data retention for YouTube API compliance
  * 
  * @param channelId - YouTube channel ID to fetch insights for
  * @returns Object with insights data, loading state, error handling, and cache management functions
  */
 
-// Cache duration: 5 minutes
-const CACHE_DURATION = 5 * 60 * 1000;
+// Cache duration: 2 minutes (reduced for compliance)
+const CACHE_DURATION = 2 * 60 * 1000;
 
 // In-memory cache for the session
 const cache = new Map<string, CacheEntry>();
